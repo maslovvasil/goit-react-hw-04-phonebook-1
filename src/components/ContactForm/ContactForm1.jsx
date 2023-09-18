@@ -1,86 +1,57 @@
-import { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { nanoid } from 'nanoid';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 
 import styles from './ContactForm.module.css';
 
-// const SignupSchema = Yup.object().shape({
-//     firstName: Yup.string()
-//       .min(2, 'Too Short!')
-//       .max(50, 'Too Long!')
-//       .required('Required'),
-//     lastName: Yup.string()
-//       .min(2, 'Too Short!')
-//       .max(50, 'Too Long!')
-//       .required('Required'),
-//     email: Yup.string().email('Invalid email').required('Required'),
-//   });
+const schema = Yup.object().shape({
+  name: Yup.string().min(1, 'Too short!').required('Required'),
+  number: Yup.string()
+    .min(9, 'Must be at least 9 symbols')
+    .required('Required'),
+});
 
-  const schema = Yup.object().shape({
-    name: Yup.string()
-      .min(2, 'Too Short!')
-      .max(50, 'Too Long!')
-      .required('Required'),
-      number: Yup.number()
-      .positive('Must be >0')
-      .min(10, 'Too Long!')
-      .required('Required'),
-   
-  });
+const ContactForm = ({ onSubmit }) => {
+  // const [contactName, setContactName] = useState('');
+  // const [contactNumber, setContactNumber] = useState('');
 
-const ContactForm = ({ addContact }) => {
 
-    const [contactName, setContactName] = useState('');
-    const [contactNumber, setContactNumber] = useState('');
 
-    const handleNameInput = e => {
-        setContactName(e.currentTarget.value);
-      };
-      const handleNumberInput = e => {
-        setContactNumber(e.currentTarget.value);
-      };
-
-    //   const reset = () => {
-    //     setContactName('');
-    //     setContactNumber('');
-    //   };
-
-    
-    
-
-    return ( 
-        <>
-  
-            <Formik
-                initialValues={{
-                    name: '',
-                    number: '',
-                }}
-                validationSchema={schema}
-                onSubmit={async (values, actions) => {
-                  console.log(values);
-                  addContact(values);
-                  actions.resetForm();
-                }}
-                >
-                <Form className={styles.form} >
+  return (
+    <Formik
+      initialValues={{
+        name: '',
+        number: '',
+      }}
+      validationSchema={schema}
+      onSubmit={(values, actions) => {
+        onAdd({ ...values, id: nanoid() });
+        actions.resetForm();
+      }}
+    >
+   <Form className={styles.form} onSubmit={handleSubmit}>
                     <label className={styles.lbl}>
                         Name
-                        <Field id="firstName" name="name" placeholder="" />
+                        <Field value={contactName} name="name" placeholder="Name" onChange={handleNameInput}/>
                     </label>
-                    
-
                     <label className={styles.lbl}>
                         Number
-                        <Field id="lastName" name="number" placeholder="" />
-                        </label>
-                    
-
-                    <button className={styles.btn} type="submit">Submit</button>
+                        <Field value={contactNumber} name="number" placeholder="Number phone" onChange={handleNumberInput}/>
+                    </label>
+                    <button className={styles.btn} type="submit" >Submit</button>
                 </Form>
-            </Formik>
-        </>
-        );
-}
- 
-export default ContactForm;
+    </Formik>
+  );
+};
+
+ContactForm.propTypes = {
+  initialValues: PropTypes.shape({
+    name: PropTypes.string,
+    number: PropTypes.number,
+  }),
+  id: PropTypes.string,
+};
+
+export { ContactForm };
