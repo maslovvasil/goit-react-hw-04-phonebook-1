@@ -54,4 +54,4 @@ ContactForm.propTypes = {
   id: PropTypes.string,
 };
 
-export { ContactForm };
+// export { ContactForm };
