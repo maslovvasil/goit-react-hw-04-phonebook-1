@@ -14,7 +14,7 @@ export const App = () => {
 
   const [contacts, setContacts] = useState(initialState);
   const [filter, setFilter] = useState('');
-  console.log(contacts);
+  // console.log(contacts);
 
   
 

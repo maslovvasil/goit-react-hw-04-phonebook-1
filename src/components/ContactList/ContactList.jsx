@@ -26,14 +26,3 @@ ContactList.propTypes = {
 };
 
 export default ContactList;
-
-
-
-
-// const ContactList = () => {
-//     return ( 
-//         <>ContactList</>
-//         );
-// }
- 
-// export default ContactList;

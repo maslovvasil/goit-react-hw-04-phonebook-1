@@ -1,75 +1,98 @@
 import { useState } from 'react';
-import { Formik, Field, Form } from 'formik';
-import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
-
 import styles from './ContactForm.module.css';
 
-  const schema = Yup.object().shape({
-    name: Yup.string()
-      .min(2, 'Too Short!')
-      .max(50, 'Too Long!')
-      .required('Required'),
-      number: Yup.number()
-      .positive('Must be >0')
-      .min(8, 'Must be at least 8 symbols')
-      .required('Required'),
-   
-  });
-
 const ContactForm = ({ onSubmit }) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const [nameErrorMessage, setNameErrorMessage] = useState('');
+  const [numberErrorMessage, setNumberErrorMessage] = useState('');
 
-    const [contactName, setContactName] = useState('');
-    const [contactNumber, setContactNumber] = useState('');
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'name') {
+        const words = value.split(' ');
+      const formattedWords = words.map((word) => {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      });
+      const formattedValue = formattedWords.join(' ');
+      setName(formattedValue);
+      setNameErrorMessage('');
+    } else if (name === 'number') {
+      setNumber(value);
+      setNumberErrorMessage('');
+    }
+  };
 
-    const handleNameInput = e => {
-            setContactName(e.currentTarget.value);
-      };
-      const handleNumberInput = e => {
-            setContactNumber(e.currentTarget.value);
-      };
-
-      const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    const id = nanoid();
 
-        onSubmit({
-            id: nanoid(5),
-            name: contactName,
-            number: contactNumber,
-        });
-            setContactName('');
-            setContactNumber('');
+    // Перевірка ім'я за допомогою паттерну
+    if (!/^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/.test(name)) {
+      setNameErrorMessage('Name may contain only letters, apostrophe, dash and spaces.');
+      return;
     }
 
-    return ( 
-        <>
-  
-            <Formik
-                initialValues={{
-                    name: '',
-                    number: '',
-                }}
-                validationSchema={schema}
-            
-                onSubmit = {(values, {resetForm} )=> {
-                    console.log(JSON.stringify(values, null, 2))
-                    resetForm()
-                    }}
-                >
-                <Form className={styles.form} onSubmit={handleSubmit}>
-                    <label className={styles.lbl}>
-                        Name
-                        <Field value={contactName} name="name" placeholder="Name" onChange={handleNameInput}/>
-                    </label>
-                    <label className={styles.lbl}>
-                        Number
-                        <Field value={contactNumber} name="number" placeholder="Number phone" onChange={handleNumberInput}/>
-                    </label>
-                    <button className={styles.btn} type="submit" >Submit</button>
-                </Form>
-            </Formik>
-        </>
-        );
+    // Перевірка номера за допомогою паттерну
+    if (!/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/.test(number)) {
+      setNumberErrorMessage('Phone number must be digits and can contain spaces, dashes, parentheses and can start with +');
+      return;
+    }
+
+    // // Якщо валідація успішна, ви можете відправити дані або виконати інші дії
+    // alert('Form submitted successfully!');
+    onSubmit({ id, name, number });
+    reset();
+  };
+    
+  const reset = () => {
+    setName('');
+    setNumber('');
+  };
+
+  return (
+    <div>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <div>
+          <label className={styles.form__label}>{'Name'}</label>
+          <input
+          className={styles.form__input}
+            type="text"
+            id="name"
+            name="name"
+            value={name}
+            onChange={handleChange}
+            required
+          />
+          <p className="error-message">{nameErrorMessage}</p>
+        </div>
+
+        <div>
+          <label className={styles.form__label}>Number:</label>
+          <input
+          className={styles.form__input}
+            type="tel"
+            id="number"
+            name="number"
+            value={number}
+            onChange={handleChange}
+            required
+          />
+          <p className="error-message">{numberErrorMessage}</p>
+        </div>
+
+        <button className={styles.submit__btn} type="submit">
+        Add contact
+     </button>
+      </form>
+    </div>
+  );
 }
- 
+
+ContactForm.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+};
+
 export default ContactForm;
