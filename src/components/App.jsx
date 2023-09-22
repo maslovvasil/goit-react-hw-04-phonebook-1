@@ -1,57 +1,82 @@
 import { useState } from 'react';
- 
+import { nanoid } from 'nanoid';
+import ContactForm from './ContactForm';
+import ContactList from './ContactList';
+import Filter from './Filter';
+import Section from './Section';
+import Container from './Container';
+import useLocalStorage from 'UseLocalStorage/useLocalStorage';
 
-import ContactForm from "./ContactForm/ContactForm";
-import ContactList from './ContactList/ContactList';
-import Filter from './Filter/Filter';
+export default function App() {
+  // state = {
+  //   contacts: [
+  //     { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+  //     { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+  //     { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+  //     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+  //   ],
+  //   filter: '',
+  // };
 
-import initialState from '../../src/contacts.json'
-
-import styles from './App.module.css'
-
-
-export const App = () => {
-
-  const [contacts, setContacts] = useState(initialState);
+  const [contacts, setContacts] = useLocalStorage('contacts', []);
   const [filter, setFilter] = useState('');
-  // console.log(contacts);
 
-  
+  const formSubmitHandler = ({ name, number }) => {
+    const id = nanoid(5);
+    const contact = {
+      id,
+      name,
+      number,
+    };
+
+    //Checking if the contact is already added
+
+    const checkedContact = contacts.find(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
+
+    checkedContact
+      ? alert(`${name} is already in contacts`)
+      : setContacts(contacts => [contact, ...contacts]);
+  };
+
+  //Getting and rendering already existing contacts
+
+  const getVisibleContacts = () => {
+    const contactsFilter = filter.toLowerCase();
+
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(contactsFilter)
+    );
+  };
+
+  //Text input search of coincidences in input and contact list
+
+  const changeFilter = event => {
+    setFilter(event.currentTarget.value);
+  };
+
+  //Deleting contact
 
   const deleteContact = contactId => {
     setContacts(contacts.filter(contact => contact.id !== contactId));
   };
 
-
-  const handleAddContact = (newContact) => setContacts(prev => [newContact, ...prev]);
-
-  const getFilteredContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
-
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizedFilter)
-    );
-  };
-
-  const changeFilter = (e) => {
-    setFilter(e.currentTarget.value);
-  };
-  
-  const filteredContacts = getFilteredContacts();
-
   return (
-    <div className={styles.container}>
-        
-            <h2 className="header__text" >Phonebook</h2>
-            <ContactForm onSubmit={handleAddContact} />
-            <h2 className="header__text" >Contacts</h2>
-            <Filter value={filter}  onChange={changeFilter} />
-            <ContactList
-            contacts={filteredContacts}
-            id={contacts.id}
-             onDeleteContact={deleteContact}
-             />         
-    </div>
+    <>
+      <Container>
+        <Section title={'Phonebook'}>
+          <ContactForm onSubmit={formSubmitHandler} />
+        </Section>
+        <Section title={'Contacts'}>
+          <Filter value={filter} changeFilter={changeFilter} />
+          <ContactList
+            contacts={getVisibleContacts()}
+            onDeleteContact={deleteContact}
+          />
+        </Section>
+      </Container>
+    </>
   );
-};
+}
  
