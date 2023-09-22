@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import css from './ContactForm.module.css';
+import styles from './ContactForm.module.css';
 
 export default function ContactForm({ onSubmit }) {
   const [name, setName] = useState('');
@@ -34,11 +34,11 @@ export default function ContactForm({ onSubmit }) {
   };
 
   return (
-    <form className={css.form} onSubmit={handleSubmit}>
-      <label className={css.form__label}>
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <label className={styles.form__label}>
         {'Name'}
         <input
-          className={css.form__input}
+          className={styles.form__input}
           type="text"
           name="name"
           value={name}
@@ -49,10 +49,10 @@ export default function ContactForm({ onSubmit }) {
         />
       </label>
 
-      <label className={css.form__label}>
+      <label className={styles.form__label}>
         {'Number'}
         <input
-          className={css.form__input}
+          className={styles.form__input}
           type="tel"
           name="number"
           value={number}
@@ -63,7 +63,7 @@ export default function ContactForm({ onSubmit }) {
         />
       </label>
 
-      <button className={css.submit__btn} type="submit">
+      <button className={styles.submit__btn} type="submit">
         Add contact
       </button>
     </form>
