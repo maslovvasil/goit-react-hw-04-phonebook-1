@@ -65,7 +65,7 @@ export default function App() {
   return (
     <>
       <Container>
-        <Section title={'Phonebook'}>
+        <Section className="header__text" title={'Phonebook'}>
           <ContactForm onSubmit={formSubmitHandler} />
         </Section>
         <Section title={'Contacts'}>

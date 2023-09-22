@@ -1,5 +1,9 @@
 .section__title {
-    font-weight: 600;
-    font-weight: 36px;
-    color: #786c5e;
+    text-align: center;
+    line-height: 1.7;
+    font-size: 28px;
+    text-shadow: 0 0 2px #000;
+    color: #05d532;
+    transition: color 0.4s;
+    text-align: left;
   }
