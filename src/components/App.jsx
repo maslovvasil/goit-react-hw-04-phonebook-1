@@ -5,8 +5,9 @@ import ContactList from './ContactList';
 import Filter from './Filter';
 import Section from './Section';
 import Container from './Container';
-import useLocalStorage from 'UseLocalStorage/useLocalStorage';
-
+// import useLocalStorage from 'UseLocalStorage/UseLocalStorage';
+import useLocalStorage from '../UseLocalStorage/index';
+console.log(useLocalStorage);
 export default function App() {
   // state = {
   //   contacts: [

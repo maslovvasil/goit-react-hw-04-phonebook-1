@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-function useLocalStorage(key, value) {
-  const [state, setState] = useState(() => {
+function UseLocalStorage(key, value) {
+  const [state, setState] = useState((value) => {
     return (
       JSON.parse(localStorage.getItem(key)) ?? [
         { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
@@ -18,4 +18,4 @@ function useLocalStorage(key, value) {
   return [state, setState];
 }
 
-export default useLocalStorage;
+export default UseLocalStorage;
