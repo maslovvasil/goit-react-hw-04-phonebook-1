@@ -5,7 +5,7 @@ import ContactList from './ContactList';
 import Filter from './Filter';
 import Section from './Section';
 import Container from './Container';
-import useLocalStorage from 'UseLocalStorage';
+import useLocalStorage from '../UseLocalStorage';
 
 export default function App() {
 
